@@ -1,0 +1,10 @@
+{
+  "request_url": "/api/financials?companyId=123",
+  "response_body": {
+    "company_id": "123",
+    "revenue": 10500,
+    "profit": 2500,
+    "source": "Calculated"
+  },
+  "note": "If 'source' is 'Coalesced (Shared)', it means the request reused a concurrent calculation."
+}
