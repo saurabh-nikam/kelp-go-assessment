@@ -27,7 +27,7 @@ func (s *DataService) GetInitialData(companyID string) (*models.InitialData, err
 		log.Printf("[InitialData] Starting calculation for Company %s...", companyID)
 		// Simulate heavy processing
 		time.Sleep(2 * time.Second)
-		
+
 		data := &models.InitialData{
 			CompanyID:    companyID,
 			BaseValue:    1000.0, // Dummy calculation
@@ -55,7 +55,7 @@ func (s *DataService) GetFinancials(companyID string) (*models.FinancialsRespons
 
 	v, err, shared := s.apiGroup.Do(key, func() (interface{}, error) {
 		log.Printf("[Financials] Processing request for Company %s...", companyID)
-		
+
 		// Step 1: Get Initial Data (this is also coalesced)
 		initData, err := s.GetInitialData(companyID)
 		if err != nil {
@@ -79,12 +79,12 @@ func (s *DataService) GetFinancials(companyID string) (*models.FinancialsRespons
 		return nil, err
 	}
 
-	resp := v.(*models.FinancialsResponse)
+	resp := *v.(*models.FinancialsResponse)
 	if shared {
 		resp.Source = "Coalesced (Shared)"
 		log.Printf("[Financials] Returning shared response for Company %s", companyID)
 	}
-	return resp, nil
+	return &resp, nil
 }
 
 // GetSales calculates sales data, reusing InitialData and coalescing concurrent requests.
@@ -114,12 +114,12 @@ func (s *DataService) GetSales(companyID string) (*models.SalesResponse, error) 
 		return nil, err
 	}
 
-	resp := v.(*models.SalesResponse)
+	resp := *v.(*models.SalesResponse)
 	if shared {
 		resp.Source = "Coalesced (Shared)"
 		log.Printf("[Sales] Returning shared response for Company %s", companyID)
 	}
-	return resp, nil
+	return &resp, nil
 }
 
 // GetEmployeeStats calculates employee stats, reusing InitialData and coalescing concurrent requests.
@@ -149,10 +149,10 @@ func (s *DataService) GetEmployeeStats(companyID string) (*models.EmployeeStatsR
 		return nil, err
 	}
 
-	resp := v.(*models.EmployeeStatsResponse)
+	resp := *v.(*models.EmployeeStatsResponse)
 	if shared {
 		resp.Source = "Coalesced (Shared)"
 		log.Printf("[Employees] Returning shared response for Company %s", companyID)
 	}
-	return resp, nil
+	return &resp, nil
 }
