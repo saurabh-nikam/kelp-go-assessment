@@ -19,7 +19,7 @@ func TestRequestCoalescing(t *testing.T) {
 		var wg sync.WaitGroup
 		numRequests := 5
 		responses := make([]models.FinancialsResponse, numRequests)
-		
+
 		start := time.Now()
 
 		for i := 0; i < numRequests; i++ {
@@ -71,12 +71,12 @@ func TestRequestCoalescing(t *testing.T) {
 	// They should share the Initial Data calculation.
 	t.Run("Shared Initial Data", func(t *testing.T) {
 		var wg sync.WaitGroup
-		
+
 		// We will hit Financials and Sales at the same time.
 		// Both take 2s (Initial) + 0.5s (Specific).
 		// Total time should be around 2.5s, and Initial Data should be computed once.
 		// We can't easily check internal logs here, but we can check timing.
-		
+
 		start := time.Now()
 		wg.Add(2)
 
